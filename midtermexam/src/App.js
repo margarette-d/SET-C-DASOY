@@ -1,21 +1,22 @@
 import React, { useState } from "react";
+import "./App.css";
 
 function App() {
   // Form Fields State
   const [movieName, setMovieName] = useState("");
   const [moviePoster, setMoviePoster] = useState("");
   const [yearRelease, setYearRelease] = useState("Select a Year");
-  const [movieRating, setMovieRating] = useState("");
+  const [movieRating, setMovieRating] = useState("5"); // Default middle value for slider
   const [castInput, setCastInput] = useState("");
   const [movieCast, setMovieCast] = useState([]);
   const [synopsis, setSynopsis] = useState("");
 
   // Application Data State
   const [movies, setMovies] = useState([]);
-  const [editIndex, setEditIndex] = useState(null); // Tracks if we are updating
+  const [editIndex, setEditIndex] = useState(null);
   const [error, setError] = useState("");
 
-  // Add individual cast member to the temporary list
+  // Add individual cast member to the list without rendering a preview list underneath
   const handleAddCast = () => {
     if (castInput.trim() !== "") {
       setMovieCast([...movieCast, castInput.trim()]);
@@ -28,7 +29,7 @@ function App() {
     setMovieName("");
     setMoviePoster("");
     setYearRelease("Select a Year");
-    setMovieRating("");
+    setMovieRating("5");
     setCastInput("");
     setMovieCast([]);
     setSynopsis("");
@@ -84,17 +85,14 @@ function App() {
     };
 
     if (editIndex !== null) {
-      // Update existing movie
       const updatedMovies = [...movies];
       updatedMovies[editIndex] = movieData;
       setMovies(updatedMovies);
       setEditIndex(null);
     } else {
-      // Create new movie
       setMovies([...movies, movieData]);
     }
 
-    // Clear fields after create/update action
     handleClear();
   };
 
@@ -104,7 +102,7 @@ function App() {
     setMovieName(movie.movieName);
     setMoviePoster(movie.moviePoster);
     setYearRelease(movie.yearRelease);
-    setMovieRating(movie.movieRating);
+    setMovieRating(String(movie.movieRating));
     setMovieCast(movie.movieCast);
     setSynopsis(movie.synopsis);
     setEditIndex(index);
@@ -118,40 +116,43 @@ function App() {
   };
 
   return (
-    <div className="app-container" style={{ fontFamily: "Arial, sans-serif", padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
-      <h1 style={{ textAlign: "center", textTransform: "uppercase", borderBottom: "2px solid #ccc", paddingBottom: "10px" }}>
-        List of Movies
+    <div style={{ fontFamily: "Arial, sans-serif", padding: "10px", maxWidth: "900px", margin: "0 auto" }}>
+      <h1 style={{ textAlign: "center", textTransform: "uppercase", fontSize: "28px", marginBottom: "30px" }}>
+        LIST OF MOVIES
       </h1>
 
       {/* Error Notification */}
       {error && <div style={{ color: "red", textAlign: "center", marginBottom: "15px", fontWeight: "bold" }}>{error}</div>}
 
-      {/* Form Section */}
-      <form onSubmit={handleSubmit} style={{ background: "#f9f9f9", padding: "20px", border: "1px solid #ddd", marginBottom: "40px" }}>
-        <div style={{ marginBottom: "12px", display: "flex", alignItems: "center" }}>
-          <label style={{ width: "130px", fontWeight: "bold" }}>Movie Name:</label>
+      {/* Form Section matching exact design */}
+      <form onSubmit={handleSubmit} style={{ width: "500px", margin: "0 auto 40px auto" }}>
+        <div style={{ marginBottom: "8px", display: "flex", alignItems: "center" }}>
+          <label style={{ width: "110px", textAlign: "right", paddingRight: "10px", fontSize: "14px" }}>Movie Name:</label>
           <input
             type="text"
             value={movieName}
             onChange={(e) => setMovieName(e.target.value)}
-            style={{ flex: 1, padding: "5px" }}
+            style={{ width: "250px", padding: "2px 4px", border: "1px solid #7f7f7f" }}
           />
         </div>
 
-        <div style={{ marginBottom: "12px", display: "flex", alignItems: "center" }}>
-          <label style={{ width: "130px", fontWeight: "bold" }}>Movie Poster:</label>
+        <div style={{ marginBottom: "8px", display: "flex", alignItems: "center" }}>
+          <label style={{ width: "110px", textAlign: "right", paddingRight: "10px", fontSize: "14px" }}>Movie Poster:</label>
           <input
             type="text"
             value={moviePoster}
             onChange={(e) => setMoviePoster(e.target.value)}
-            placeholder="Image URL"
-            style={{ flex: 1, padding: "5px" }}
+            style={{ width: "250px", padding: "2px 4px", border: "1px solid #7f7f7f" }}
           />
         </div>
 
-        <div style={{ marginBottom: "12px", display: "flex", alignItems: "center" }}>
-          <label style={{ width: "130px", fontWeight: "bold" }}>Year Release:</label>
-          <select value={yearRelease} onChange={(e) => setYearRelease(e.target.value)} style={{ flex: 1, padding: "5px" }}>
+        <div style={{ marginBottom: "8px", display: "flex", alignItems: "center" }}>
+          <label style={{ width: "110px", textAlign: "right", paddingRight: "10px", fontSize: "14px" }}>Year Release:</label>
+          <select 
+            value={yearRelease} 
+            onChange={(e) => setYearRelease(e.target.value)} 
+            style={{ width: "120px", padding: "2px 4px", border: "1px solid #7f7f7f" }}
+          >
             <option value="Select a Year">Select a Year</option>
             <option value="2024">2024</option>
             <option value="2023">2023</option>
@@ -166,60 +167,62 @@ function App() {
           </select>
         </div>
 
-        <div style={{ marginBottom: "12px", display: "flex", alignItems: "center" }}>
-          <label style={{ width: "130px", fontWeight: "bold" }}>Movie Rating:</label>
-          <input
-            type="number"
-            min="1"
-            max="10"
-            value={movieRating}
-            onChange={(e) => setMovieRating(e.target.value)}
-            style={{ flex: 1, padding: "5px" }}
-          />
-        </div>
-
-        <div style={{ marginBottom: "12px", display: "flex", alignItems: "flex-start" }}>
-          <label style={{ width: "130px", fontWeight: "bold", paddingTop: "5px" }}>Movie Cast:</label>
-          <div style={{ flex: 1 }}>
-            <div style={{ display: "flex", gap: "10px", marginBottom: "5px" }}>
-              <input
-                type="text"
-                value={castInput}
-                onChange={(e) => setCastInput(e.target.value)}
-                placeholder="Add cast member"
-                style={{ flex: 1, padding: "5px" }}
-              />
-              <button type="button" onClick={handleAddCast} style={{ padding: "5px 10px" }}>
-                Add Cast
-              </button>
-            </div>
-            <ul style={{ margin: "5px 0", paddingLeft: "20px" }}>
-              {movieCast.map((c, idx) => (
-                <li key={idx}>{c}</li>
-              ))}
-            </ul>
+        {/* Rating Slider Component matching layout */}
+        <div style={{ marginBottom: "8px", display: "flex", alignItems: "center" }}>
+          <label style={{ width: "110px", textAlign: "right", paddingRight: "10px", fontSize: "14px" }}>Movie Rating:</label>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <input
+              type="range"
+              min="1"
+              max="10"
+              value={movieRating}
+              onChange={(e) => setMovieRating(e.target.value)}
+              style={{ width: "150px", cursor: "pointer" }}
+            />
+            <span style={{ fontSize: "13px", minWidth: "20px" }}>{movieRating}</span>
           </div>
         </div>
 
-        <div style={{ marginBottom: "15px", display: "flex", alignItems: "flex-start" }}>
-          <label style={{ width: "130px", fontWeight: "bold", paddingTop: "5px" }}>Synopsis:</label>
+        <div style={{ textAlign: "center", fontWeight: "bold", margin: "10px 0", fontSize: "14px" }}>
+          Movie Cast:
+        </div>
+
+        <div style={{ marginBottom: "8px", display: "flex", justifyContent: "center", alignItems: "center", gap: "5px" }}>
+          <input
+            type="text"
+            value={castInput}
+            onChange={(e) => setCastInput(e.target.value)}
+            style={{ width: "250px", padding: "2px 4px", border: "1px solid #7f7f7f" }}
+          />
+          <button type="button" onClick={handleAddCast} style={{ padding: "2px 8px", fontSize: "13px", cursor: "pointer" }}>
+            Add Cast
+          </button>
+        </div>
+
+        <div style={{ textAlign: "center", fontWeight: "bold", margin: "10px 0", fontSize: "14px" }}>
+          Sypnosis:
+        </div>
+
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: "15px" }}>
           <textarea
             value={synopsis}
             onChange={(e) => setSynopsis(e.target.value)}
-            rows="4"
-            style={{ flex: 1, padding: "5px" }}
+            rows="5"
+            style={{ width: "380px", padding: "4px", border: "1px solid #7f7f7f", resize: "vertical" }}
           />
         </div>
 
         <div style={{ textAlign: "center", display: "flex", justifyContent: "center", gap: "10px" }}>
-          <button type="submit" style={{ padding: "6px 20px", fontWeight: "bold" }}>
+          <button type="submit" style={{ padding: "3px 15px", fontSize: "13px", cursor: "pointer" }}>
             {editIndex !== null ? "Update" : "Submit"}
           </button>
-          <button type="button" onClick={handleClear} style={{ padding: "6px 20px" }}>
+          <button type="button" onClick={handleClear} style={{ padding: "3px 15px", fontSize: "13px", cursor: "pointer" }}>
             Clear
           </button>
         </div>
       </form>
+
+      <hr style={{ border: "0", borderTop: "1px solid #ccc", margin: "30px 0" }} />
 
       {/* Display Component Section */}
       <MovieDisplay movies={movies} onEdit={handleEdit} onDelete={handleDelete} />
@@ -232,7 +235,6 @@ function MovieDisplay({ movies, onEdit, onDelete }) {
   return (
     <div>
       {movies.map((movie, index) => {
-        // Recommendation logic requirement
         const recommendationText =
           movie.movieRating < 5 ? `${movie.movieRating} - Not Recommended` : `${movie.movieRating} - Highly Recommended`;
 
@@ -240,13 +242,14 @@ function MovieDisplay({ movies, onEdit, onDelete }) {
           <div
             key={index}
             style={{
-              borderTop: "2px solid #ccc",
-              paddingTop: "20px",
-              marginTop: "20px",
+              paddingTop: "10px",
+              marginBottom: "40px",
               textAlign: "center",
             }}
           >
-            <h2 style={{ textTransform: "uppercase" }}>Movie Number : {index + 1}</h2>
+            <h2 style={{ textTransform: "uppercase", fontSize: "22px", marginBottom: "15px" }}>
+              MOVIE NUMBER : {index + 1}
+            </h2>
 
             <div style={{ margin: "15px 0" }}>
               <img
@@ -256,17 +259,17 @@ function MovieDisplay({ movies, onEdit, onDelete }) {
               />
             </div>
 
-            <p style={{ margin: "8px 0" }}>
+            <p style={{ margin: "6px 0", fontSize: "14px" }}>
               <strong>Movie Name:</strong> {movie.movieName}
             </p>
-            <p style={{ margin: "8px 0" }}>
+            <p style={{ margin: "6px 0", fontSize: "14px" }}>
               <strong>Year Release:</strong> {movie.yearRelease}
             </p>
-            <p style={{ margin: "8px 0" }}>
+            <p style={{ margin: "6px 0", fontSize: "14px" }}>
               <strong>Movie Rate:</strong> {recommendationText}
             </p>
 
-            <div style={{ margin: "10px 0" }}>
+            <div style={{ margin: "10px 0", fontSize: "14px" }}>
               <strong>Movie Cast:</strong>
               <ol style={{ listStylePosition: "inside", padding: 0, margin: "5px 0" }}>
                 {movie.movieCast.map((castMember, cIdx) => (
@@ -275,18 +278,20 @@ function MovieDisplay({ movies, onEdit, onDelete }) {
               </ol>
             </div>
 
-            <p style={{ margin: "10px 20px", textAlign: "justify" }}>
-              <strong>Synopsis:</strong> {movie.synopsis}
+            <p style={{ margin: "10px auto", maxWidth: "600px", textAlign: "center", fontSize: "14px" }}>
+              <strong>Sypnosis:</strong> {movie.synopsis}
             </p>
 
             <div style={{ margin: "15px 0", display: "flex", justifyContent: "center", gap: "10px" }}>
-              <button onClick={() => onDelete(index)} style={{ padding: "4px 15px" }}>
+              <button onClick={() => onDelete(index)} style={{ padding: "2px 12px", fontSize: "12px", cursor: "pointer" }}>
                 Delete
               </button>
-              <button onClick={() => onEdit(index)} style={{ padding: "4px 15px" }}>
+              <button onClick={() => onEdit(index)} style={{ padding: "2px 12px", fontSize: "12px", cursor: "pointer" }}>
                 Edit
               </button>
             </div>
+
+            <hr style={{ border: "0", borderTop: "1px solid #ccc", margin: "30px 0" }} />
           </div>
         );
       })}

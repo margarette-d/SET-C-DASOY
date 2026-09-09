@@ -1,22 +1,21 @@
 import React, { useState } from "react";
-import "./App.css";
 
 function App() {
-  // Form Fields State
+  // Form Fields
   const [movieName, setMovieName] = useState("");
   const [moviePoster, setMoviePoster] = useState("");
   const [yearRelease, setYearRelease] = useState("Select a Year");
-  const [movieRating, setMovieRating] = useState("5"); // Default middle value for slider
+  const [movieRating, setMovieRating] = useState("5"); 
   const [castInput, setCastInput] = useState("");
   const [movieCast, setMovieCast] = useState([]);
   const [synopsis, setSynopsis] = useState("");
 
-  // Application Data State
+  // Data State
   const [movies, setMovies] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [error, setError] = useState("");
 
-  // Add individual cast member to the list without rendering a preview list underneath
+  // Add cast member
   const handleAddCast = () => {
     if (castInput.trim() !== "") {
       setMovieCast([...movieCast, castInput.trim()]);
@@ -24,7 +23,7 @@ function App() {
     }
   };
 
-  // Clear all fields function
+  // Clear function
   const handleClear = () => {
     setMovieName("");
     setMoviePoster("");
@@ -37,11 +36,10 @@ function App() {
     setError("");
   };
 
-  // Handle Form Submission (Create or Update)
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validation: All fields are required
+    // All fields are required
     if (
       !movieName.trim() ||
       !moviePoster.trim() ||
@@ -53,21 +51,21 @@ function App() {
       return;
     }
 
-    // Validation: Year Release option check
+    // Years
     const validYears = ["2024", "2023", "2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015"];
     if (!validYears.includes(yearRelease)) {
       setError("Please select a valid Year Release.");
       return;
     }
 
-    // Validation: Movie Rating range from 1 to 10
+    // Rating
     const ratingNum = Number(movieRating);
     if (isNaN(ratingNum) || ratingNum < 1 || ratingNum > 10) {
       setError("Movie Rating should range from 1 to 10.");
       return;
     }
 
-    // Validation: Movie Cast should have at least one value
+  
     if (movieCast.length === 0) {
       setError("The Movie Cast should have at least one value in its list.");
       return;
@@ -96,7 +94,7 @@ function App() {
     handleClear();
   };
 
-  // Handle Edit Action
+  // Edit Function
   const handleEdit = (index) => {
     const movie = movies[index];
     setMovieName(movie.movieName);
@@ -109,22 +107,22 @@ function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Handle Delete Action
+  // Delete Function
   const handleDelete = (index) => {
     const updatedMovies = movies.filter((_, i) => i !== index);
     setMovies(updatedMovies);
   };
 
+  // Form
   return (
     <div style={{ fontFamily: "Arial, sans-serif", padding: "10px", maxWidth: "900px", margin: "0 auto" }}>
       <h1 style={{ textAlign: "center", textTransform: "uppercase", fontSize: "28px", marginBottom: "30px" }}>
         LIST OF MOVIES
       </h1>
 
-      {/* Error Notification */}
       {error && <div style={{ color: "red", textAlign: "center", marginBottom: "15px", fontWeight: "bold" }}>{error}</div>}
 
-      {/* Form Section matching exact design */}
+
       <form onSubmit={handleSubmit} style={{ width: "500px", margin: "0 auto 40px auto" }}>
         <div style={{ marginBottom: "8px", display: "flex", alignItems: "center" }}>
           <label style={{ width: "110px", textAlign: "right", paddingRight: "10px", fontSize: "14px" }}>Movie Name:</label>
@@ -167,7 +165,6 @@ function App() {
           </select>
         </div>
 
-        {/* Rating Slider Component matching layout */}
         <div style={{ marginBottom: "8px", display: "flex", alignItems: "center" }}>
           <label style={{ width: "110px", textAlign: "right", paddingRight: "10px", fontSize: "14px" }}>Movie Rating:</label>
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -224,13 +221,12 @@ function App() {
 
       <hr style={{ border: "0", borderTop: "1px solid #ccc", margin: "30px 0" }} />
 
-      {/* Display Component Section */}
       <MovieDisplay movies={movies} onEdit={handleEdit} onDelete={handleDelete} />
     </div>
   );
 }
 
-// Separate Component to Display Movies
+// Display Movies
 function MovieDisplay({ movies, onEdit, onDelete }) {
   return (
     <div>

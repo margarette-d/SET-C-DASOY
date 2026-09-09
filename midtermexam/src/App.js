@@ -120,6 +120,8 @@ function App() {
         LIST OF MOVIES
       </h1>
 
+      <hr style={{ border: "0", borderTop: "2px solid #000000a0", margin: "30px 0" }} />
+
       {error && <div style={{ color: "red", textAlign: "center", marginBottom: "15px", fontWeight: "bold" }}>{error}</div>}
 
 
@@ -219,7 +221,7 @@ function App() {
         </div>
       </form>
 
-      <hr style={{ border: "0", borderTop: "1px solid #ccc", margin: "30px 0" }} />
+      <hr style={{ border: "0", borderTop: "2px solid #000000a0", margin: "30px 0" }} />
 
       <MovieDisplay movies={movies} onEdit={handleEdit} onDelete={handleDelete} />
     </div>
@@ -287,7 +289,8 @@ function MovieDisplay({ movies, onEdit, onDelete }) {
               </button>
             </div>
 
-            <hr style={{ border: "0", borderTop: "1px solid #ccc", margin: "30px 0" }} />
+            <hr style={{ border: "0", borderTop: "2px solid #000000a0", margin: "30px 0" }} />
+            
           </div>
         );
       })}
